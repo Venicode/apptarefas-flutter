@@ -7,13 +7,14 @@ class TaskDao {
   static const String tableSql = 'CREATE TABLE $_tablename('
       '$_name TEXT,'
       '$_difficulty INTEGER,'
-      '$_image TEXT)';
+      '$_image TEXT,'
+      '$_level INTEGER)';
 
   static const String _tablename = 'taskTable';
   static const String _name = 'nome';
   static const String _difficulty = 'dificuldade';
   static const String _image = 'imagem';
-
+  static const String _level = 'nivel';
 //CRUD
 //SAVE: Método para salvar os dados da tarefa
   save(Task tarefa) async {
@@ -56,7 +57,7 @@ class TaskDao {
   delete(String nomeDaTarefa) async {
     print("Deletando uma tarefa");
     final Database bancoDeDados = await getDataBase();
-    return bancoDeDados.delete(_tablename, where: '_name = ?', whereArgs: [nomeDaTarefa]);
+    return bancoDeDados.delete(_tablename, where: '$_name = ?', whereArgs: [nomeDaTarefa]);
   }
 
 //MÉTODOS DE CONVERSÃO
@@ -79,7 +80,11 @@ class TaskDao {
     mapadeTarefas[_name] = tarefa.nome;
     mapadeTarefas[_difficulty] = tarefa.dificuldade;
     mapadeTarefas[_image] = tarefa.foto;
+    mapadeTarefas[_level] = tarefa.nivel;
     print("Mapa de tarefas convertido");
     return mapadeTarefas;
   }
 }
+
+
+// TO DO: UPDATE NO DATABASE

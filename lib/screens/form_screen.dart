@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application/components/task.dart';
+import 'package:flutter_application/data/task_dao.dart';
 import 'package:flutter_application/data/task_inherited.dart';
-
 
 class FormScreen extends StatefulWidget {
   const FormScreen({Key? key, required this.taskContext}) : super(key: key);
@@ -17,27 +18,32 @@ class _FormScreenState extends State<FormScreen> {
   TextEditingController imageController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
-  bool valueValidator(String? value){
-    if(value != null && value.isEmpty){
+  bool valueValidator(String? value) {
+    if (value != null && value.isEmpty) {
       return true;
     }
     return false;
   }
-  bool difficultyValidator(String?value){
-     if(value != null && value.isEmpty){
-      if(int.parse(value) > 5 ||int.parse(value) < 1){
+
+  bool difficultyValidator(String? value) {
+    if (value != null && value.isEmpty) {
+      if (int.parse(value) > 5 || int.parse(value) < 1) {
         return true;
       }
     }
     return false;
   }
+
   @override
   Widget build(BuildContext context) {
     return Form(
       key: _formKey,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Nova Tarefa', style: TextStyle(color: Colors.white),),
+          title: const Text(
+            'Nova Tarefa',
+            style: TextStyle(color: Colors.white),
+          ),
           backgroundColor: Colors.lightGreen,
         ),
         body: Center(
@@ -136,14 +142,19 @@ class _FormScreenState extends State<FormScreen> {
                       ),
                     ),
                   ),
+
+                  //Salva a tarefa criada no banco de dados
                   ElevatedButton(
-                    style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.lightGreen)),
+                    style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            Colors.lightGreen)),
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
-                        TaskInherited.of(widget.taskContext).newTask(
+                        TaskDao().save(Task(
                             nameController.text,
                             imageController.text,
-                            int.parse(difficultyController.text));
+                            int.parse(difficultyController.text)));
+
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                             content: Text('Criando uma nova Tarefa'),
@@ -153,7 +164,10 @@ class _FormScreenState extends State<FormScreen> {
                         Navigator.pop(context);
                       }
                     },
-                    child: Text('Adicionar!', style: TextStyle(color: Colors.white),),
+                    child: Text(
+                      'Adicionar!',
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                 ],
               ),
